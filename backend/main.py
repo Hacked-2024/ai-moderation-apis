@@ -18,8 +18,8 @@ client = OpenAI(
 def hello_world():
     return {'data': 'This is the default return content'}
 
-@app.route("/moderate-open-ai", methods=['POST'])
-def moderate_open_ai():
+@app.route("/moderate", methods=['POST'])
+def moderate():
     data = request.get_json()
 
     if 'textInput' not in data:
@@ -32,5 +32,4 @@ def moderate_open_ai():
     output = result.model_dump_json()
 
     return output
-    
 
