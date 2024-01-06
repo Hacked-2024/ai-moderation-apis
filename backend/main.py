@@ -31,7 +31,7 @@ def moderate():
     result = response.results[0]
     output = result.model_dump_json()
 
-    return output
+    return output, 200
 
 
 @app.route("/fact-check", methods=['POST'])
