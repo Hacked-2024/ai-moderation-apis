@@ -18,8 +18,8 @@ client = OpenAI(
 def hello_world():
     return {'data': 'This is the default return content'}
 
-@app.route("/moderate-open-ai", methods=['POST'])
-def moderate_open_ai():
+@app.route("/moderate", methods=['POST'])
+def moderate():
     data = request.get_json()
 
     if 'textInput' not in data:
@@ -31,6 +31,31 @@ def moderate_open_ai():
     result = response.results[0]
     output = result.model_dump_json()
 
-    return output
-    
+    return output, 200
 
+
+@app.route("/fact-check", methods=['POST'])
+def fact_check():
+    data = request.get_json()
+
+    if 'textInput' not in data:
+        return "Post request missing correct body keys", 400
+    
+    textInput = data["textInput"]
+
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo", 
+        messages=[
+            {
+                "role": "user", 
+                "content": f"""Assume you are a bot trained to detect misinformation. 
+                Output only 1 number on a scale from 1-10, 10 being fact and 1 being a lie.:\"{textInput}\""""
+            }
+        ]
+    )
+
+    result = completion.choices[0].message.content
+
+    return {
+        "truthfulness": completion.choices[0].message.content
+    }, 200
