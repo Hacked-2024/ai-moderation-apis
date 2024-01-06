@@ -23,15 +23,14 @@ def moderate_open_ai():
     data = request.get_json()
 
     if 'textInput' not in data:
-        return "Posted data missing key(s)", 400
+        return "Post request missing correct body keys", 400
     
     input = data["textInput"]
     
     response = client.moderations.create(input=input)
-    output = response.results[0]
+    result = response.results[0]
+    output = result.model_dump_json()
 
-    return {
-        "output": output
-    }
+    return output
     
 
