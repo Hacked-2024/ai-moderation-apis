@@ -16,6 +16,27 @@ client = OpenAI(
 
 CORS(app)
 
+def getNumericalPromptResponse(prompt):
+    response = ""
+
+    while not response.isdigit():
+
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo", 
+            messages=[
+                {
+                    "role": "user", 
+                    "content": prompt
+                }
+            ]
+        )
+        response = completion.choices[0].message.content
+
+        if not response: 
+            response = ""
+
+    return response
+
 @app.route("/")
 def hello_world():
     return {'data': 'This is the default return content'}
@@ -56,8 +77,6 @@ def fact_check():
         ]
     )
 
-    result = completion.choices[0].message.content
-
     return {
         "truthfulness": completion.choices[0].message.content
     }, 200
@@ -81,8 +100,6 @@ def offensiveness():
             }
         ]
     )
-
-    result = completion.choices[0].message.content
 
     return {
         "offensiveness": completion.choices[0].message.content
