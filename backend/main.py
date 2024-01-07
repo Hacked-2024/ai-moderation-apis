@@ -3,7 +3,6 @@ from flask_cors import CORS, cross_origin
 
 from dotenv import load_dotenv
 import os
-
 load_dotenv("./.env")
 
 from openai import OpenAI
@@ -66,19 +65,13 @@ def fact_check():
     
     textInput = data["textInput"]
 
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo", 
-        messages=[
-            {
-                "role": "user", 
-                "content": f"""Assume you are a bot trained to detect misinformation. 
+    response = getNumericalPromptResponse(
+        f"""Assume you are a bot trained to detect misinformation. 
                 Output only 1 number on a scale from 1-10, 10 being fact and 1 being a lie.:\"{textInput}\""""
-            }
-        ]
     )
 
     return {
-        "truthfulness": completion.choices[0].message.content
+        "truthfulness": response
     }, 200
 
 @app.route("/offensiveness", methods=['POST'])
@@ -90,17 +83,11 @@ def offensiveness():
     
     textInput = data["textInput"]
 
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo", 
-        messages=[
-            {
-                "role": "user", 
-                "content": f"""Assume you are a bot trained to detect offensive speech. 
+    response = getNumericalPromptResponse(
+        f"""Assume you are a bot trained to detect offensive speech. 
                 Output only 1 number on a scale from 1-10, 10 being extemely offensive and 1 being inoffensive.:\"{textInput}\""""
-            }
-        ]
     )
 
     return {
-        "offensiveness": completion.choices[0].message.content
+        "offensiveness": response
     }, 200
