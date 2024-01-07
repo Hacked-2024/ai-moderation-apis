@@ -27,10 +27,11 @@ This endpoint must be called with a POST, containing the field "image" which hol
 Checks if the given image conatins hateful content. Returns True if hateful content was found, False otherwise.
 
 ## Running the API
-Create your virtual environment. 
-Install all packages in requirements.txt.
-Create a .env file in the backend. It should have two keys:
-With your terminal sitting in ai-moderation-apis/backend run "flask --app main run --debug". 
+1. Create your virtual environment. 
+2. Install all packages in requirements.txt.
+3. Create a .env file in the backend. It should have two keys: OPEN_API_KEY with a Open AI API key, and API_TOKEN with a hugging face key.
+4. With your terminal sitting in ai-moderation-apis/backend run "flask --app main run --debug". 
+
 It should now be running on http://127.0.0.1:5000.
 
 ## Models Used
