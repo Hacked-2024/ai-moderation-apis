@@ -153,7 +153,7 @@ def hateful_image():
     #     return "image_data not in base64", 400
 
     hateful = image.classify_image(image_data)
-    if isinstance(hateful, str): return "Model warming up :(", 503
+    if not isinstance(hateful, bool): return hateful, 503
 
     return {
         "hateful": hateful

@@ -41,7 +41,9 @@ def classify_image(image_data):
             
             time.sleep(2)
 
-    if not scores: return "Error"
+    if not scores: 
+        print(results)
+        return results
 
     hateful = True
     for score in scores: hateful = hateful and (score > 0.5)
