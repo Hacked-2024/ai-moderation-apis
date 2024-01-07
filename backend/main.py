@@ -14,6 +14,8 @@ client = OpenAI(
     api_key=os.environ.get("OPEN_API_KEY")
 )
 
+CORS(app)
+
 @app.route("/")
 def hello_world():
     return {'data': 'This is the default return content'}
