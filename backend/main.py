@@ -15,9 +15,11 @@ client = OpenAI(
 
 CORS(app)
 
+MAX_OPENAI_CALLS = 3
+
 def getNumericalPromptResponse(prompt):
     response = ""
-
+    calls = 0
     while not response.isdigit():
 
         completion = client.chat.completions.create(
@@ -33,6 +35,10 @@ def getNumericalPromptResponse(prompt):
 
         if not response: 
             response = ""
+
+        calls += 1
+        if calls == MAX_OPENAI_CALLS:
+            raise ConnectionError("Failed to receive proper OpenAI response")
 
     return response
 
