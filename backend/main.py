@@ -43,12 +43,12 @@ def getNumericalPromptResponse(prompt):
     return response
 
 @app.route("/")
-@cross_origin
+@cross_origin()
 def hello_world():
     return {'data': 'This is the default return content'}
 
 @app.route("/moderate", methods=['POST'])
-@cross_origin
+@cross_origin()
 def moderate():
     data = request.get_json()
 
@@ -65,7 +65,7 @@ def moderate():
 
 
 @app.route("/fact-check", methods=['POST'])
-@cross_origin
+@cross_origin()
 def fact_check():
     data = request.get_json()
 
@@ -84,7 +84,7 @@ def fact_check():
     }, 200
 
 @app.route("/offensiveness", methods=['POST'])
-@cross_origin
+@cross_origin()
 def offensiveness():
     data = request.get_json()
 
