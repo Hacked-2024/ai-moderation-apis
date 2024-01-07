@@ -1,3 +1,6 @@
+import base64
+import image
+
 from flask import Flask, request, render_template, Response
 from flask_cors import CORS, cross_origin
 
@@ -84,4 +87,44 @@ def offensiveness():
 
     return {
         "offensiveness": completion.choices[0].message.content
+    }, 200
+
+@app.route("/hateful-image", methods=['POST'])
+def hateful_image():
+    """
+    Decides whether an image contains hateful content.
+    Make sure the body is in JSON format.
+
+    method: POST
+    fields:
+        image: a 64base encoding of an image
+
+    Responses:
+        200:
+            fields:
+                hateful: true if hateful, false if not
+        
+        400:
+            Reason: image field wasn't passed or was passed incorrectly
+            Reason: image field is not encoded in base64
+        
+        503:
+            Reason: Models are not running. Maybe they'll work later.
+    """
+    data = request.get_json()
+
+    if "image" not in data:
+        return "Post request missing correct body keys", 400
+
+    image_data = data["image"]
+
+    # Not working for now, maybe fix later
+    # if base64.b64encode(base64.b64decode(image_data)) != image_data:
+    #     return "image_data not in base64", 400
+
+    hateful = image.classify_image(image_data)
+    if isinstance(hateful, str): return "Model warming up :(", 503
+
+    return {
+        "hateful": hateful
     }, 200

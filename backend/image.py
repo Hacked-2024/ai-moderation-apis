@@ -1,10 +1,19 @@
 import requests
 import json
 import base64
+import time
 
-API_TOKEN = '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'
+from dotenv import load_dotenv
+import os
+
+load_dotenv("./.env")
+#Use below env path if running image.py as main
+#load_dotenv("./ai-moderation-apis/backend/.env")
+
+API_TOKEN = os.environ.get("API_TOKEN")
 API_URL = "https://api-inference.huggingface.co/models/"
 MODEL_IDS = ["yuvalkirstain/PickScore_v1", "openai/clip-vit-large-patch14", "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"]
+
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
 def query(model_id, image_data):
@@ -21,14 +30,22 @@ def query(model_id, image_data):
     return json.loads(response.content.decode("utf-8"))
 
 def classify_image(image_data):
-
+    scores = []
     for model_id in MODEL_IDS:
-        results = query(model_id, image_data)
-        print(results)
-        score = results[0]['score'] if results[0]['label'] == 'hateful' else results[1]['score']
-        if score <= 0.5: return False
+        for i in range(2):
+            results = query(model_id, image_data)
+            
+            if isinstance(results, list): 
+                scores.append(results[0]['score'] if results[0]['label'] == 'hateful' else results[1]['score'])
+                break
+            
+            time.sleep(2)
 
-    return True
+    if not scores: return "Error"
+
+    hateful = True
+    for score in scores: hateful = hateful and (score > 0.5)
+    return hateful
 
 
 if __name__ == '__main__':
