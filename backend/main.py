@@ -15,7 +15,7 @@ client = OpenAI(
 
 CORS(app)
 
-MAX_OPENAI_CALLS = 3
+MAX_OPENAI_CALLS = 50
 
 def getNumericalPromptResponse(prompt):
     response = ""
@@ -73,7 +73,7 @@ def fact_check():
 
     response = getNumericalPromptResponse(
         f"""Assume you are a bot trained to detect misinformation. 
-                Output only 1 number on a scale from 1-10, 10 being fact and 1 being a lie.:\"{textInput}\""""
+                Output only one number on a scale from 1-10, 10 being fact and 1 being a lie.:\"{textInput}\""""
     )
 
     return {
@@ -91,7 +91,7 @@ def offensiveness():
 
     response = getNumericalPromptResponse(
         f"""Assume you are a bot trained to detect offensive speech. 
-                Output only 1 number on a scale from 1-10, 10 being extemely offensive and 1 being inoffensive.:\"{textInput}\""""
+                Output only one number on a scale from 1-10, 10 being extemely offensive and 1 being inoffensive.:\"{textInput}\""""
     )
 
     return {
