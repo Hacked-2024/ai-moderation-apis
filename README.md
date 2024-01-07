@@ -46,3 +46,10 @@ It should now be running on http://127.0.0.1:5000.
 [Laion-2B Zero-Shot Image Classification by Romain Beaumont](https://huggingface.co/laion/CLIP-ViT-H-14-laion2B-s32B-b79K)
 
 [Pickscore Zero-Shot Image Classification by Yuval Kirstain, Adam Polyak, Uriel Singer, Shahbuland Matiana, Joe Penna and Omer Levy](https://huggingface.co/yuvalkirstain/PickScore_v1)
+
+## Developers
+Ashley Anderson,
+Jacob Feng,
+Brant Harker,
+Mihiri Kamiss,
+and Alisa Uhlman
