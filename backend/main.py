@@ -64,6 +64,24 @@ def moderate():
 
     return output, 200
 
+@app.route("/filter-check", methods=['POST'])
+def filter_check():
+    data = request.get_json()
+
+    if 'textInput' not in data or 'filter' not in data:
+        return "Post request missing correct body keys", 400
+    
+    textInput = data["textInput"]
+    filter = data["filter"]
+
+    response = getNumericalPromptResponse(
+        f"""Assume you are a bot trained to detect hate speech and harmful content. Does this message, \"{textInput}\", contain hate speech or harmful content in any of these catrgories: {filter}? return 1 if True or 0 if False."""
+    )
+
+    return {
+        "filtered": response
+    }, 200
+
 
 @app.route("/fact-check", methods=['POST'])
 def fact_check():
