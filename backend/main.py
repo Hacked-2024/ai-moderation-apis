@@ -3,7 +3,6 @@ from flask_cors import CORS, cross_origin
 
 from dotenv import load_dotenv
 import os
-
 load_dotenv("./.env")
 
 from openai import OpenAI
@@ -15,6 +14,33 @@ client = OpenAI(
 )
 
 CORS(app)
+
+MAX_OPENAI_CALLS = 3
+
+def getNumericalPromptResponse(prompt):
+    response = ""
+    calls = 0
+    while not response.isdigit():
+
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo", 
+            messages=[
+                {
+                    "role": "user", 
+                    "content": prompt
+                }
+            ]
+        )
+        response = completion.choices[0].message.content
+
+        if not response: 
+            response = ""
+
+        calls += 1
+        if calls == MAX_OPENAI_CALLS:
+            raise ConnectionError("Failed to receive proper OpenAI response")
+
+    return response
 
 @app.route("/")
 def hello_world():
@@ -45,21 +71,13 @@ def fact_check():
     
     textInput = data["textInput"]
 
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo", 
-        messages=[
-            {
-                "role": "user", 
-                "content": f"""Assume you are a bot trained to detect misinformation. 
+    response = getNumericalPromptResponse(
+        f"""Assume you are a bot trained to detect misinformation. 
                 Output only 1 number on a scale from 1-10, 10 being fact and 1 being a lie.:\"{textInput}\""""
-            }
-        ]
     )
 
-    result = completion.choices[0].message.content
-
     return {
-        "truthfulness": completion.choices[0].message.content
+        "truthfulness": response
     }, 200
 
 @app.route("/offensiveness", methods=['POST'])
@@ -71,19 +89,11 @@ def offensiveness():
     
     textInput = data["textInput"]
 
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo", 
-        messages=[
-            {
-                "role": "user", 
-                "content": f"""Assume you are a bot trained to detect offensive speech. 
+    response = getNumericalPromptResponse(
+        f"""Assume you are a bot trained to detect offensive speech. 
                 Output only 1 number on a scale from 1-10, 10 being extemely offensive and 1 being inoffensive.:\"{textInput}\""""
-            }
-        ]
     )
 
-    result = completion.choices[0].message.content
-
     return {
-        "offensiveness": completion.choices[0].message.content
+        "offensiveness": response
     }, 200
