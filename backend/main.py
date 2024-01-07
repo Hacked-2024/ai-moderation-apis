@@ -93,8 +93,9 @@ def fact_check():
     textInput = data["textInput"]
 
     response = getNumericalPromptResponse(
-        f"""Assume you are a bot trained to detect misinformation. 
-                Output only one number on a scale from 1-10, 10 being fact and 1 being a lie.:\"{textInput}\""""
+        f"""Assume you are a bot trained to detect misinformation on social media captions. 
+        Output only one number on a scale from 1-10, 1 being fact and 10 being a lie. If the input is opinionated, lower the final score by 2, unless the input offers medical advice/information. Input: \"{textInput}\""""
+
     )
 
     return {
