@@ -31,6 +31,7 @@ def query(model_id, image_data):
 
 def classify_image(image_data):
     scores = []
+    errors = []
     for model_id in MODEL_IDS:
         for i in range(2):
             results = query(model_id, image_data)
@@ -38,12 +39,10 @@ def classify_image(image_data):
             if isinstance(results, list): 
                 scores.append(results[0]['score'] if results[0]['label'] == 'hateful' else results[1]['score'])
                 break
-            
-            time.sleep(2)
 
-    if not scores: 
-        print(results)
-        return results
+            errors.append(results)
+
+    if not scores: return errors
 
     hateful = True
     for score in scores: hateful = hateful and (score > 0.5)
