@@ -137,10 +137,7 @@ def hateful_image():
         
         400:
             Reason: image field wasn't passed or was passed incorrectly
-            Reason: image field is not encoded in base64
-        
-        503:
-            Reason: Models are not running. Maybe they'll work later.
+            Reason: image data is not readable
     """
     data = request.get_json()
 
