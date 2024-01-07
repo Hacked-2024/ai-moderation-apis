@@ -59,3 +59,29 @@ def fact_check():
     return {
         "truthfulness": completion.choices[0].message.content
     }, 200
+
+@app.route("/offensiveness", methods=['POST'])
+def offensiveness():
+    data = request.get_json()
+
+    if 'textInput' not in data:
+        return "Post request missing correct body keys", 400
+    
+    textInput = data["textInput"]
+
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo", 
+        messages=[
+            {
+                "role": "user", 
+                "content": f"""Assume you are a bot trained to detect offensive speech. 
+                Output only 1 number on a scale from 1-10, 10 being extemely offensive and 1 being inoffensive.:\"{textInput}\""""
+            }
+        ]
+    )
+
+    result = completion.choices[0].message.content
+
+    return {
+        "offensiveness": completion.choices[0].message.content
+    }, 200
